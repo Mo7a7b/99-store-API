@@ -10,7 +10,7 @@ import {
 import { OrdersService } from './orders.service';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { RolesGuard } from './guards/roleGuard.guard';
-import { RequestWithUser } from 'types';
+import { RequestWithUser } from '../../types';
 
 @Controller('orders')
 export class OrderController {

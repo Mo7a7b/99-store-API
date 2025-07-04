@@ -12,7 +12,7 @@ import { CreatePaymentDto } from './dtos/create-payment.dto';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { Response as ExpRes } from 'express';
 import * as path from 'path';
-import { RequestWithUser } from 'types';
+import { RequestWithUser } from '../../types';
 
 @Controller('payments')
 export class PaymentsController {

@@ -3,7 +3,7 @@ import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { OrderStatus, RequestWithUser } from 'types';
+import { OrderStatus, RequestWithUser } from '../../types';
 
 @Injectable()
 export class UsersService {

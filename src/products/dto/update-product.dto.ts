@@ -11,7 +11,7 @@ import {
   Max,
   IsNotEmpty,
 } from 'class-validator';
-import { Brands, Categories, SubCategories } from 'types';
+import { Brands, Categories, SubCategories } from '../../../types';
 
 export class UpdateProductDto extends PartialType(CreateProductDto) {
   @IsString({ message: 'Name must be a string' })

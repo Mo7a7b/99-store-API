@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { CURRENT_TIMESTAMP } from '../../../constants';
-import { Cart, OrderStatus } from 'types';
+import { Cart, OrderStatus } from '../../../types';
 import { Payment } from './payments.entity';
 
 @Entity({ name: 'orders' })

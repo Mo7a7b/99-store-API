@@ -6,7 +6,7 @@ import { CreatePaymentDto } from './dtos/create-payment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Payment } from './entities/payments.entity';
 import { Repository } from 'typeorm';
-import { RequestWithUser } from 'types';
+import { RequestWithUser } from '../../types';
 import { Order } from './entities/order.entity';
 
 @Injectable()

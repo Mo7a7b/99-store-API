@@ -1,5 +1,5 @@
 import { IsEnum, IsNumber, IsObject, IsString } from 'class-validator';
-import { Cart } from 'types';
+import { Cart } from '../../../types';
 
 enum Currency {
   USD = 'usd',

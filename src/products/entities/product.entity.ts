@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { CURRENT_TIMESTAMP } from '../../../constants';
-import { Brands, Categories, SubCategories } from 'types';
+import { Brands, Categories, SubCategories } from '../../../types';
 @Entity({ name: 'products' })
 export class Product {
   @PrimaryGeneratedColumn()

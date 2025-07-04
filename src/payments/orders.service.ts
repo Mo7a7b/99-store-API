@@ -6,7 +6,7 @@ import {
 import { Order } from './entities/order.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { OrderStatus, RequestWithUser } from 'types';
+import { OrderStatus, RequestWithUser } from '../../types';
 
 @Injectable()
 export class OrdersService {

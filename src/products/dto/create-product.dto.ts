@@ -11,7 +11,7 @@ import {
   IsIn,
   ArrayUnique,
 } from 'class-validator';
-import { Brands, Categories, SubCategories } from 'types';
+import { Brands, Categories, SubCategories } from '../../../types';
 
 export class CreateProductDto {
   @IsString({ message: 'Name must be a string' })

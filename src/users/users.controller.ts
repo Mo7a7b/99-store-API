@@ -18,7 +18,7 @@ import { AuthProvider } from './auth.provider';
 import { Response, Request } from 'express';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from './guards/jwt.guard';
-import { RequestWithUser } from 'types';
+import { RequestWithUser } from '../../types';
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('users')
 export class UsersController {
