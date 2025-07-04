@@ -20,7 +20,7 @@ export class JwtAuthGuard implements CanActivate {
     if (!token) {
       throw new UnauthorizedException('Token not found');
     }
-    const publicKey = fs.readFileSync('.keys/public-key.pem');
+    const publicKey = fs.readFileSync('../../../.keys/public-key.pem');
     try {
       const payload = await this.jwtService.verifyAsync<{
         [key: string]: any;

@@ -78,7 +78,7 @@ export class AuthProvider {
     return { accessToken, refreshToken };
   }
   async refreshToken(token: string, res: Response) {
-    const publicKey = fs.readFileSync('.keys/public-key.pem');
+    const publicKey = fs.readFileSync('../../keys/public-key.pem');
     try {
       const payload: { id: number } = await this.jwtService.verifyAsync(token, {
         secret: publicKey,
