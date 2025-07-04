@@ -6,12 +6,15 @@ import { AuthProvider } from './auth.provider';
 import { JwtModule } from '@nestjs/jwt';
 import * as fs from 'fs';
 import { UsersService } from './users.service';
+import { join } from 'path';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModule.registerAsync({
       useFactory: () => {
-        const privateKey = fs.readFileSync('../../keys/private-key.pem');
+        const privateKey = fs.readFileSync(
+          join(__dirname, '../../keys/private-key.pem'),
+        );
         return {
           global: true,
           secret: privateKey,

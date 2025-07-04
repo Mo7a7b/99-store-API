@@ -7,6 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import * as fs from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -20,7 +21,9 @@ export class JwtAuthGuard implements CanActivate {
     if (!token) {
       throw new UnauthorizedException('Token not found');
     }
-    const publicKey = fs.readFileSync('../../../keys/public-key.pem');
+    const publicKey = fs.readFileSync(
+      join(__dirname, '../../../keys/public-key.pem'),
+    );
     try {
       const payload = await this.jwtService.verifyAsync<{
         [key: string]: any;

@@ -6,13 +6,16 @@ import { Product } from './entities/product.entity';
 import { JwtModule } from '@nestjs/jwt';
 import * as fs from 'fs';
 import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
+import { join } from 'path';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Product]),
     JwtModule.registerAsync({
       useFactory: () => {
-        const privateKey = fs.readFileSync('../../keys/private-key.pem');
+        const privateKey = fs.readFileSync(
+          join(__dirname, '../../keys/private-key.pem'),
+        );
         return {
           global: true,
           secret: privateKey,

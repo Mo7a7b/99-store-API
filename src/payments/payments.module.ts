@@ -8,12 +8,15 @@ import * as fs from 'fs';
 import { Order } from './entities/order.entity';
 import { OrderController } from './order.controller';
 import { OrdersService } from './orders.service';
+import { join } from 'path';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Payment, Order]),
     JwtModule.registerAsync({
       useFactory: () => {
-        const privateKey = fs.readFileSync('../../keys/private-key.pem');
+        const privateKey = fs.readFileSync(
+          join(__dirname, '../../keys/private-key.pem'),
+        );
         return {
           global: true,
           secret: privateKey,

@@ -10,6 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import * as fs from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class AuthProvider {
@@ -78,7 +79,9 @@ export class AuthProvider {
     return { accessToken, refreshToken };
   }
   async refreshToken(token: string, res: Response) {
-    const publicKey = fs.readFileSync('../../keys/private-key.pem');
+    const publicKey = fs.readFileSync(
+      join(__dirname, '../../keys/public-key.pem'),
+    );
     try {
       const payload: { id: number } = await this.jwtService.verifyAsync(token, {
         secret: publicKey,
