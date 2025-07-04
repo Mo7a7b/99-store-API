@@ -6,7 +6,7 @@
     "deleteOutDir": true,
     "assets": [
       { "include": "templates/*.html", "outDir": "dist/src" },
-      { "include": "../.keys/*.pem", "outDir": "dist/.keys" }
+      { "include": "../keys/*.pem", "outDir": "dist/keys" }
     ]
   }
 }

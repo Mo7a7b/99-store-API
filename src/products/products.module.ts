@@ -12,7 +12,7 @@ import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
     TypeOrmModule.forFeature([Product]),
     JwtModule.registerAsync({
       useFactory: () => {
-        const privateKey = fs.readFileSync('../../.keys/private-key.pem');
+        const privateKey = fs.readFileSync('../../keys/private-key.pem');
         return {
           global: true,
           secret: privateKey,

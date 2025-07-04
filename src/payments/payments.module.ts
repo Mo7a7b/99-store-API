@@ -13,7 +13,7 @@ import { OrdersService } from './orders.service';
     TypeOrmModule.forFeature([Payment, Order]),
     JwtModule.registerAsync({
       useFactory: () => {
-        const privateKey = fs.readFileSync('../../.keys/private-key.pem');
+        const privateKey = fs.readFileSync('../../keys/private-key.pem');
         return {
           global: true,
           secret: privateKey,
