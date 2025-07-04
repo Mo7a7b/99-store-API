@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Payment Cancelled</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        background: radial-gradient(
+          circle at 60% 40%,
+          #ffbcbc 0%,
+          #ffe6e6 100%
+        );
+        min-height: 100vh;
+        margin: 0;
+        font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+      .container {
+        background: rgba(255, 255, 255, 0.97);
+        border-radius: 28px;
+        box-shadow:
+          0 8px 32px rgba(255, 99, 132, 0.18),
+          0 1.5px 8px rgba(255, 205, 210, 0.12);
+        padding: 54px 44px 44px 44px;
+        text-align: center;
+        max-width: 420px;
+        position: relative;
+        animation: popIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      }
+      @keyframes popIn {
+        0% {
+          transform: scale(0.7);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .crossmark {
+        width: 90px;
+        height: 90px;
+        margin: 0 auto 24px auto;
+        display: block;
+      }
+      .crossmark circle {
+        stroke-dasharray: 285;
+        stroke-dashoffset: 285;
+        stroke: #ff6b81;
+        stroke-width: 8;
+        fill: none;
+        animation: drawCircle 0.7s ease-out forwards;
+      }
+      .crossmark path {
+        stroke-dasharray: 60;
+        stroke-dashoffset: 60;
+        stroke: #ff6b81;
+        stroke-width: 8;
+        fill: none;
+        animation: drawCross 0.5s 0.5s ease-out forwards;
+      }
+      @keyframes drawCircle {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+      @keyframes drawCross {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+      h1 {
+        color: #b71c1c;
+        font-size: 2.2rem;
+        margin-bottom: 12px;
+        letter-spacing: 1px;
+        font-weight: 700;
+      }
+      p {
+        color: #6d2323;
+        font-size: 1.13rem;
+        margin-bottom: 32px;
+      }
+      .btn {
+        background: linear-gradient(90deg, #ff6b81 0%, #ffbcbc 100%);
+        color: #fff;
+        border: none;
+        border-radius: 30px;
+        padding: 14px 36px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 4px 16px rgba(255, 99, 132, 0.13);
+        transition:
+          background 0.2s,
+          transform 0.2s;
+        text-decoration: none;
+        display: inline-block;
+      }
+      .btn:hover {
+        background: linear-gradient(90deg, #ffbcbc 0%, #ff6b81 100%);
+        transform: translateY(-2px) scale(1.04);
+      }
+      .sad-face {
+        position: absolute;
+        top: -32px;
+        right: -32px;
+        width: 60px;
+        height: 60px;
+        opacity: 0.7;
+        animation: floatSad 3s ease-in-out infinite alternate;
+      }
+      @keyframes floatSad {
+        0% {
+          transform: translateY(0) rotate(-8deg);
+        }
+        100% {
+          transform: translateY(18px) rotate(8deg);
+        }
+      }
+      .confetti {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 999;
+      }
+      .bubble {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.18;
+        pointer-events: none;
+        animation: bubbleFloat 8s linear infinite;
+      }
+      @keyframes bubbleFloat {
+        0% {
+          transform: translateY(0) scale(1);
+        }
+        100% {
+          transform: translateY(-120vh) scale(1.2);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas class="confetti"></canvas>
+    <div class="container">
+      <svg class="crossmark" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="45" />
+        <path d="M35 35 L65 65" />
+        <path d="M65 35 L35 65" />
+      </svg>
+      <h1>Payment Cancelled</h1>
+      <p>
+        Oops! Your payment was not completed.<br />
+        If this was a mistake, you can try again.<br />
+        No charges have been made.
+      </p>
+      <a href="https://99-store.vercel.app" class="btn">Back to Store</a>
+      <svg class="sad-face" viewBox="0 0 60 60">
+        <circle
+          cx="30"
+          cy="30"
+          r="28"
+          fill="#ffbcbc"
+          stroke="#ff6b81"
+          stroke-width="3"
+        />
+        <ellipse cx="22" cy="28" rx="4" ry="6" fill="#fff" />
+        <ellipse cx="38" cy="28" rx="4" ry="6" fill="#fff" />
+        <ellipse cx="22" cy="30" rx="2" ry="3" fill="#6d2323" />
+        <ellipse cx="38" cy="30" rx="2" ry="3" fill="#6d2323" />
+        <path
+          d="M22 42 Q30 36 38 42"
+          stroke="#b71c1c"
+          stroke-width="2.5"
+          fill="none"
+        />
+      </svg>
+    </div>
+    <script>
+      // Confetti burst (red/pink theme)
+      const canvas = document.querySelector('.confetti');
+      const ctx = canvas.getContext('2d');
+      let W = window.innerWidth,
+        H = window.innerHeight;
+      canvas.width = W;
+      canvas.height = H;
+      const confettiColors = [
+        '#ff6b81',
+        '#ffbcbc',
+        '#fff',
+        '#b71c1c',
+        '#ff8a80',
+      ];
+      const confettiCount = 60;
+      const confetti = [];
+      function randomBetween(a, b) {
+        return a + Math.random() * (b - a);
+      }
+      for (let i = 0; i < confettiCount; i++) {
+        confetti.push({
+          x: randomBetween(0, W),
+          y: randomBetween(-H, 0),
+          r: randomBetween(6, 12),
+          d: randomBetween(2, 6),
+          color:
+            confettiColors[Math.floor(Math.random() * confettiColors.length)],
+          tilt: randomBetween(-10, 10),
+          tiltAngle: 0,
+          tiltAngleIncremental: randomBetween(0.05, 0.12),
+        });
+      }
+      function drawConfetti() {
+        ctx.clearRect(0, 0, W, H);
+        confetti.forEach((c) => {
+          ctx.beginPath();
+          ctx.lineWidth = c.d;
+          ctx.strokeStyle = c.color;
+          ctx.moveTo(c.x + c.tilt + c.r / 3, c.y);
+          ctx.lineTo(c.x + c.tilt, c.y + c.r);
+          ctx.stroke();
+        });
+        updateConfetti();
+        requestAnimationFrame(drawConfetti);
+      }
+      function updateConfetti() {
+        confetti.forEach((c) => {
+          c.y += c.d + 2;
+          c.tiltAngle += c.tiltAngleIncremental;
+          c.tilt = Math.sin(c.tiltAngle) * 15;
+          if (c.y > H) {
+            c.x = randomBetween(0, W);
+            c.y = randomBetween(-20, 0);
+            c.tilt = randomBetween(-10, 10);
+          }
+        });
+      }
+      window.addEventListener('resize', () => {
+        W = window.innerWidth;
+        H = window.innerHeight;
+        canvas.width = W;
+        canvas.height = H;
+      });
+      drawConfetti();
+
+      // Floating bubbles for extra creativity
+      for (let i = 0; i < 8; i++) {
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        const size = randomBetween(40, 90);
+        bubble.style.width = size + 'px';
+        bubble.style.height = size + 'px';
+        bubble.style.left = randomBetween(0, 100) + 'vw';
+        bubble.style.bottom = randomBetween(-10, 10) + 'vh';
+        bubble.style.background =
+          'radial-gradient(circle, #ffbcbc 60%, #fff0 100%)';
+        bubble.style.animationDelay = randomBetween(0, 8) + 's';
+        document.body.appendChild(bubble);
+      }
+    </script>
+  </body>
+</html>
