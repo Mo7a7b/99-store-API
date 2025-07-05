@@ -6,6 +6,7 @@ import {
   Req,
   Res,
   UseGuards,
+  RawBodyRequest,
 } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { CreatePaymentDto } from './dtos/create-payment.dto';
@@ -27,7 +28,7 @@ export class PaymentsController {
     return await this.paymentsService.createCheckoutSession(req, data);
   }
   @Post('webhook')
-  webhook(@Req() req: Request) {
+  webhook(@Req() req: RawBodyRequest<Request>) {
     return this.paymentsService.webhook(req);
   }
 

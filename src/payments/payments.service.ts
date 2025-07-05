@@ -1,5 +1,9 @@
 // src/stripe/stripe.service.ts
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  RawBodyRequest,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
 import { CreatePaymentDto } from './dtos/create-payment.dto';
@@ -56,7 +60,7 @@ export class PaymentsService {
     return { id: session.id, url: session.url };
   }
 
-  async webhook(req: Request) {
+  async webhook(req: RawBodyRequest<Request>) {
     const sig = req.headers['stripe-signature'] as string | undefined;
     const webhookSecret = this.configService.get<string>(
       'STRIPE_WEBHOOK_SECRET',
@@ -70,15 +74,13 @@ export class PaymentsService {
           'STRIPE_WEBHOOK_SECRET is not defined in environment variables',
         );
       }
-      const typedReq = req as Request & { rawBody?: Buffer; body?: Buffer };
-      const buf: Buffer | undefined = typedReq.rawBody ?? typedReq.body;
-      if (!buf) {
+      if (!req.rawBody) {
         throw new BadRequestException(
           'No raw body found on request for Stripe webhook',
         );
       }
       event = this.stripe.webhooks.constructEvent(
-        buf,
+        req.rawBody,
         sig as string,
         webhookSecret,
       );
