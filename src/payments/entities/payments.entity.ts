@@ -21,6 +21,8 @@ export class Payment {
 
   @Column('decimal', { precision: 10, scale: 2 })
   amount: number;
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  deliveryPrice: number;
 
   @Column()
   currency: string;

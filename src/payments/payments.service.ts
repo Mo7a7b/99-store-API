@@ -113,7 +113,8 @@ export class PaymentsService {
                   [key: string]: unknown;
                 })
               : null,
-            totalAmount: payment.amount,
+            totalAmount: payment.amount + payment.deliveryPrice,
+            deliveryPrice: payment.deliveryPrice,
             shippingAddress: session.metadata?.address ?? null,
           } as any);
         } catch (err) {
