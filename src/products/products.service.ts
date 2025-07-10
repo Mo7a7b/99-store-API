@@ -34,6 +34,14 @@ export class ProductsService {
     return this.productsRepo.find({ where: { stock: MoreThan(0) } });
   }
 
+  SearchByCategory(category: string) {
+    return this.productsRepo.find({ where: { category } });
+  }
+
+  SearchByBrand(brand: string) {
+    return this.productsRepo.find({ where: { brand } });
+  }
+
   findOne(id: string) {
     return this.productsRepo.findOne({ where: { id } });
   }

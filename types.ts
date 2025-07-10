@@ -51,7 +51,6 @@ export enum Brands {
   HERMES = 'hermes',
   CHLOE = 'chloe',
   FERRAGAMO = 'ferragamo',
-  TORY_BURCH = 'tory burch',
   COACH = 'coach',
   BALENCIAGA = 'balenciaga',
   OTHER = 'other',

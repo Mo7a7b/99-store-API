@@ -51,6 +51,14 @@ export class ProductsController {
   findAll() {
     return this.productsService.findAll();
   }
+  @Get('search/category/:category')
+  searchByCategory(@Param('category') category: string) {
+    return this.productsService.SearchByCategory(category);
+  }
+  @Get('search/brand/:brand')
+  searchByBrand(@Param('brand') brand: string) {
+    return this.productsService.SearchByBrand(brand);
+  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {

@@ -12,6 +12,7 @@ import { Payment } from './entities/payments.entity';
 import { Repository } from 'typeorm';
 import { RequestWithUser } from '../../types';
 import { Order } from './entities/order.entity';
+import { Product } from '../../src/products/entities/product.entity';
 
 @Injectable()
 export class PaymentsService {
@@ -23,6 +24,8 @@ export class PaymentsService {
     private readonly paymentRepo: Repository<Payment>,
     @InjectRepository(Order)
     private readonly orderRepo: Repository<Order>,
+    @InjectRepository(Product)
+    private readonly productRepo: Repository<Product>,
   ) {
     const stripeSecretKey = this.configService.get<string>('STRIPE_SECRET_KEY');
     if (!stripeSecretKey) {
@@ -104,6 +107,15 @@ export class PaymentsService {
               : null,
             userId: session.metadata?.userId ?? null,
           } as any);
+          // Reduce Stock Number of the ordered products
+          const cart = JSON.parse(session.metadata?.cart ?? '{}') as {
+            products: { id: string; stock: number; quantity: number }[];
+          };
+          for (const product of cart.products) {
+            await this.productRepo.update(product.id, {
+              stock: product.stock - product.quantity,
+            });
+          }
 
           await this.orderRepo.save({
             paymentId: payment.id,
