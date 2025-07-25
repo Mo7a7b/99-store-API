@@ -7,7 +7,7 @@ async function bootstrap() {
     rawBody: true,
   });
   app.enableCors({
-    origin: ['http://localhost:5173'],
+    origin: '*',
   });
 
   app.useGlobalPipes(
