@@ -57,8 +57,8 @@ export class PaymentsService {
         address: data.address,
       },
       mode: 'payment',
-      success_url: 'http://localhost:3000/payments/success',
-      cancel_url: 'http://localhost:3000/payments/cancel',
+      success_url: 'https://99-store-api.vercel.app/payments/success',
+      cancel_url: 'https://99-store-api.vercel.app/payments/cancel',
     });
     return { id: session.id, url: session.url };
   }
