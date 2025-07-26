@@ -44,7 +44,6 @@ export class PaymentsService {
           currency: data.currency,
           product_data: {
             name: product.name,
-            description: product.description,
             images: product.images,
           },
           unit_amount: Math.round(product.price * 100),
@@ -105,7 +104,7 @@ export class PaymentsService {
             paymentMethod: session.payment_method_types
               ? session.payment_method_types.join(',')
               : null,
-            userId: session.metadata?.userId ?? null,
+            deliveryPrice: 20,
           } as any);
           // Reduce Stock Number of the ordered products
           const cart = JSON.parse(session.metadata?.cart ?? '{}') as {
