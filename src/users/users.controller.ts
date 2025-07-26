@@ -72,8 +72,11 @@ export class UsersController {
 
   @Delete('delete')
   @UseGuards(JwtAuthGuard)
-  async deleteUser(@Req() req: RequestWithUser) {
-    return await this.usersService.deleteUser(req);
+  async deleteUser(
+    @Req() req: RequestWithUser,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return await this.usersService.deleteUser(req, res);
   }
 
   @Post('empty/orders/history')

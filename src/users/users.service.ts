@@ -3,6 +3,7 @@ import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
+import { Response } from 'express';
 import { OrderStatus, RequestWithUser } from '../../types';
 
 @Injectable()
@@ -35,7 +36,7 @@ export class UsersService {
     return user;
   }
 
-  async deleteUser(req: RequestWithUser) {
+  async deleteUser(req: RequestWithUser, res: Response) {
     const { id } = req.user;
     const user: User | null = await this.userRepo.findOne({
       where: { id: String(id) },
@@ -44,6 +45,21 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
     await this.userRepo.delete(id);
+    res.clearCookie('accessToken', {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+    });
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+    });
+    res.clearCookie('isAuthenticated', {
+      secure: false,
+      httpOnly: false,
+      sameSite: 'lax',
+    });
     return { message: 'User deleted successfully' };
   }
 
