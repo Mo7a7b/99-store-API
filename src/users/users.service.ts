@@ -27,7 +27,7 @@ export class UsersService {
     const { id } = req.user;
     const user: User | null = await this.userRepo.findOne({
       where: { id: String(id) },
-      relations: ['orders', 'orders.paymentId'],
+      relations: ['orders'],
     });
     if (!user) {
       throw new Error('User not found');
