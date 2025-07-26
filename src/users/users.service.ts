@@ -60,6 +60,11 @@ export class UsersService {
       httpOnly: false,
       sameSite: 'lax',
     });
+    res.clearCookie('hasRefreshToken', {
+      secure: false,
+      httpOnly: false,
+      sameSite: 'lax',
+    });
     return { message: 'User deleted successfully' };
   }
 

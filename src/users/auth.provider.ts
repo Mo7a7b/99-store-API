@@ -73,6 +73,12 @@ export class AuthProvider {
       sameSite: 'lax',
       maxAge: 15 * 60 * 1000,
     });
+    res.cookie('hasRefreshToken', 'true', {
+      secure: false,
+      httpOnly: false,
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
     return { user };
   }
   private async generateToken(payload: {
@@ -121,6 +127,12 @@ export class AuthProvider {
         sameSite: 'lax',
         maxAge: 15 * 60 * 1000,
       });
+      res.cookie('hasRefreshToken', 'true', {
+        secure: false,
+        httpOnly: false,
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
 
       return { user };
     } catch {
@@ -139,6 +151,11 @@ export class AuthProvider {
       sameSite: 'lax',
     });
     res.clearCookie('isAuthenticated', {
+      secure: false,
+      httpOnly: false,
+      sameSite: 'lax',
+    });
+    res.clearCookie('hasRefreshToken', {
       secure: false,
       httpOnly: false,
       sameSite: 'lax',
