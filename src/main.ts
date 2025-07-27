@@ -1,12 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { raw } from 'express';
 import cookieParser from 'cookie-parser';
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    rawBody: true,
+  });
 
-  app.use('/payments/webhook', raw({ type: 'application/json' }));
   app.enableCors({
     origin: '*',
   });

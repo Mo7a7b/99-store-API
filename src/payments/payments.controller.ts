@@ -7,7 +7,6 @@ import {
   Req,
   Res,
   UseGuards,
-  RawBodyRequest,
 } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { CreatePaymentDto } from './dtos/create-payment.dto';
@@ -15,7 +14,9 @@ import { JwtAuthGuard } from './guards/jwt.guard';
 import { Response as ExpRes } from 'express';
 import * as path from 'path';
 import { RequestWithUser } from '../../types';
-
+interface RawBodyRequest extends Request {
+  rawBody?: Buffer;
+}
 @Controller('payments')
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
@@ -30,7 +31,7 @@ export class PaymentsController {
   }
   @Post('webhook')
   webhook(
-    @Req() req: RawBodyRequest<Request>,
+    @Req() req: RawBodyRequest,
     @Headers('stripe-signature') signature: string,
   ) {
     return this.paymentsService.webhook(req, signature);

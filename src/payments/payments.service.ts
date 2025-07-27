@@ -1,9 +1,5 @@
 // src/stripe/stripe.service.ts
-import {
-  BadRequestException,
-  Injectable,
-  RawBodyRequest,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
 import { CreatePaymentDto } from './dtos/create-payment.dto';
@@ -14,7 +10,9 @@ import { RequestWithUser } from '../../types';
 import { Order } from './entities/order.entity';
 import { Product } from '../../src/products/entities/product.entity';
 import { User } from 'src/users/entities/user.entity';
-
+interface RawBodyRequest extends Request {
+  rawBody?: Buffer;
+}
 @Injectable()
 export class PaymentsService {
   private stripe: Stripe;
@@ -65,7 +63,7 @@ export class PaymentsService {
     return { id: session.id, url: session.url };
   }
 
-  async webhook(req: RawBodyRequest<Request>, sig: string) {
+  async webhook(req: RawBodyRequest, sig: string) {
     const webhookSecret = this.configService.get<string>(
       'STRIPE_WEBHOOK_SECRET',
     );
@@ -83,10 +81,15 @@ export class PaymentsService {
           'No raw body found on request for Stripe webhook',
         );
       }
-      const body = Buffer.isBuffer(req.rawBody)
-        ? req.rawBody
-        : Buffer.from(req.rawBody as string, 'utf8');
-      event = this.stripe.webhooks.constructEvent(body, sig, webhookSecret);
+      const body = req.rawBody || req.body;
+      const bodyBuffer = Buffer.isBuffer(body)
+        ? body
+        : Buffer.from(body, 'utf8');
+      event = this.stripe.webhooks.constructEvent(
+        bodyBuffer,
+        sig,
+        webhookSecret,
+      );
     } catch (err) {
       throw new BadRequestException(`Webhook Error: ${(err as Error).message}`);
     }
