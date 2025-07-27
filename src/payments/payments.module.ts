@@ -10,9 +10,10 @@ import { OrderController } from './order.controller';
 import { OrdersService } from './orders.service';
 import { join } from 'path';
 import { Product } from '../products/entities/product.entity';
+import { User } from 'src/users/entities/user.entity';
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Payment, Order, Product]),
+    TypeOrmModule.forFeature([Payment, Order, Product, User]),
     JwtModule.registerAsync({
       useFactory: () => {
         const privateKey = fs.readFileSync(

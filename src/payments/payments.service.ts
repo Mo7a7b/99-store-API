@@ -9,10 +9,11 @@ import Stripe from 'stripe';
 import { CreatePaymentDto } from './dtos/create-payment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Payment } from './entities/payments.entity';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { RequestWithUser } from '../../types';
 import { Order } from './entities/order.entity';
 import { Product } from '../../src/products/entities/product.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class PaymentsService {
@@ -26,6 +27,8 @@ export class PaymentsService {
     private readonly orderRepo: Repository<Order>,
     @InjectRepository(Product)
     private readonly productRepo: Repository<Product>,
+    @InjectRepository(User)
+    private readonly userRepo: Repository<User>,
   ) {
     const stripeSecretKey = this.configService.get<string>('STRIPE_SECRET_KEY');
     if (!stripeSecretKey) {
@@ -95,8 +98,7 @@ export class PaymentsService {
       case 'checkout.session.completed': {
         const session: Stripe.Checkout.Session = event.data.object;
         try {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          const payment: Payment = await this.paymentRepo.save({
+          const payment: Payment = this.paymentRepo.create({
             sessionId: session.id,
             amount: session.amount_total ? session.amount_total / 100 : 0,
             currency: session.currency ?? 'usd',
@@ -105,29 +107,33 @@ export class PaymentsService {
               ? session.payment_method_types.join(',')
               : null,
             deliveryPrice: 20,
-          } as any);
+          } as DeepPartial<Payment>);
+          await this.paymentRepo.save(payment);
           // Reduce Stock Number of the ordered products
-          // const cart = JSON.parse(session.metadata?.cart ?? '{}') as {
-          //   products: { id: string; stock: number; quantity: number }[];
-          // };
-          // for (const product of cart.products) {
-          //   await this.productRepo.update(product.id, {
-          //     stock: product.stock - product.quantity,
-          //   });
-          // }
-
-          // await this.orderRepo.save({
-          //   paymentId: payment.id,
-          //   user: session.metadata?.userId ?? null,
-          //   cart: session.metadata?.cart
-          //     ? (JSON.parse(session.metadata.cart) as {
-          //         [key: string]: unknown;
-          //       })
-          //     : null,
-          //   totalAmount: payment.amount + payment.deliveryPrice,
-          //   deliveryPrice: payment.deliveryPrice,
-          //   shippingAddress: session.metadata?.address ?? null,
-          // } as any);
+          const cart = JSON.parse(session.metadata?.cart ?? '{}') as {
+            products: { id: string; stock: number; quantity: number }[];
+          };
+          for (const product of cart.products) {
+            await this.productRepo.update(product.id, {
+              stock: product.stock - product.quantity,
+            });
+          }
+          const user: User | null = await this.userRepo.findOne({
+            where: { id: session.metadata?.userId },
+          });
+          const order = this.orderRepo.create({
+            payment: payment,
+            user: user,
+            cart: session.metadata?.cart
+              ? (JSON.parse(session.metadata.cart) as {
+                  [key: string]: unknown;
+                })
+              : null,
+            totalAmount: payment.amount + payment.deliveryPrice,
+            deliveryPrice: payment.deliveryPrice,
+            shippingAddress: session.metadata?.address ?? null,
+          } as DeepPartial<Order>);
+          await this.orderRepo.save(order);
         } catch (err) {
           console.error('Error saving payment:', err, 'Session:', session);
           throw new BadRequestException(err);

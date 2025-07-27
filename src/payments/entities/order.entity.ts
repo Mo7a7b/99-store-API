@@ -19,7 +19,7 @@ export class Order {
   id: string;
 
   @ManyToOne(() => User, (user) => user.orders, { nullable: false })
-  user: string;
+  user: User;
 
   @Column('jsonb')
   cart: Cart;
@@ -39,7 +39,7 @@ export class Order {
 
   @OneToOne(() => Payment, { onDelete: 'CASCADE' })
   @JoinColumn()
-  paymentId: string;
+  payment: Payment;
 
   @Column({ nullable: true })
   shippingAddress: string;
