@@ -99,7 +99,7 @@ export class PaymentsService {
           const payment: Payment = await this.paymentRepo.save({
             sessionId: session.id,
             amount: session.amount_total ? session.amount_total / 100 : 0,
-            currency: session.currency,
+            currency: session.currency ?? 'usd',
             status: this.mapStripeStatusToDb(session.payment_status),
             paymentMethod: session.payment_method_types
               ? session.payment_method_types.join(',')
@@ -107,30 +107,30 @@ export class PaymentsService {
             deliveryPrice: 20,
           } as any);
           // Reduce Stock Number of the ordered products
-          const cart = JSON.parse(session.metadata?.cart ?? '{}') as {
-            products: { id: string; stock: number; quantity: number }[];
-          };
-          for (const product of cart.products) {
-            await this.productRepo.update(product.id, {
-              stock: product.stock - product.quantity,
-            });
-          }
+          // const cart = JSON.parse(session.metadata?.cart ?? '{}') as {
+          //   products: { id: string; stock: number; quantity: number }[];
+          // };
+          // for (const product of cart.products) {
+          //   await this.productRepo.update(product.id, {
+          //     stock: product.stock - product.quantity,
+          //   });
+          // }
 
-          await this.orderRepo.save({
-            paymentId: payment.id,
-            user: session.metadata?.userId ?? null,
-            cart: session.metadata?.cart
-              ? (JSON.parse(session.metadata.cart) as {
-                  [key: string]: unknown;
-                })
-              : null,
-            totalAmount: payment.amount + payment.deliveryPrice,
-            deliveryPrice: payment.deliveryPrice,
-            shippingAddress: session.metadata?.address ?? null,
-          } as any);
+          // await this.orderRepo.save({
+          //   paymentId: payment.id,
+          //   user: session.metadata?.userId ?? null,
+          //   cart: session.metadata?.cart
+          //     ? (JSON.parse(session.metadata.cart) as {
+          //         [key: string]: unknown;
+          //       })
+          //     : null,
+          //   totalAmount: payment.amount + payment.deliveryPrice,
+          //   deliveryPrice: payment.deliveryPrice,
+          //   shippingAddress: session.metadata?.address ?? null,
+          // } as any);
         } catch (err) {
           console.error('Error saving payment:', err, 'Session:', session);
-          throw new BadRequestException('Failed to save payment');
+          throw new BadRequestException(err);
         }
         break;
       }
