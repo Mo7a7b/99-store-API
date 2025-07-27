@@ -63,9 +63,7 @@ interface CartProduct {
   price: number;
   stock: number;
   images: string[];
-  brand?: string;
-  category: string;
-  sizes: string[];
+  size?: string;
   quantity: number;
 }
 export interface Cart {

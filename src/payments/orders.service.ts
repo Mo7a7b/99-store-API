@@ -20,7 +20,7 @@ export class OrdersService {
       throw new UnauthorizedException('Unauthorized');
     }
     return this.orderRepo.find({
-      relations: ['paymentId'],
+      relations: ['payment'],
       where: {
         status: In([
           OrderStatus.PENDING,
