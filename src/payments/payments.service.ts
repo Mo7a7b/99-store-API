@@ -65,8 +65,7 @@ export class PaymentsService {
     return { id: session.id, url: session.url };
   }
 
-  async webhook(req: RawBodyRequest<Request>) {
-    const sig = req.headers['stripe-signature'] as string | undefined;
+  async webhook(req: RawBodyRequest<Request>, sig: string) {
     const webhookSecret = this.configService.get<string>(
       'STRIPE_WEBHOOK_SECRET',
     );
@@ -84,11 +83,10 @@ export class PaymentsService {
           'No raw body found on request for Stripe webhook',
         );
       }
-      event = this.stripe.webhooks.constructEvent(
-        req.rawBody,
-        sig as string,
-        webhookSecret,
-      );
+      const body = Buffer.isBuffer(req.rawBody)
+        ? req.rawBody
+        : Buffer.from(req.rawBody as string, 'utf8');
+      event = this.stripe.webhooks.constructEvent(body, sig, webhookSecret);
     } catch (err) {
       throw new BadRequestException(`Webhook Error: ${(err as Error).message}`);
     }

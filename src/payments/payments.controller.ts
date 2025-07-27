@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Headers,
   Req,
   Res,
   UseGuards,
@@ -28,8 +29,11 @@ export class PaymentsController {
     return await this.paymentsService.createCheckoutSession(req, data);
   }
   @Post('webhook')
-  webhook(@Req() req: RawBodyRequest<Request>) {
-    return this.paymentsService.webhook(req);
+  webhook(
+    @Req() req: RawBodyRequest<Request>,
+    @Headers('stripe-signature') signature: string,
+  ) {
+    return this.paymentsService.webhook(req, signature);
   }
 
   @Get('success')
